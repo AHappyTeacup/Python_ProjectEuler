@@ -10,18 +10,7 @@ def pe_prob_005(n):
     :param n: Our number
     :return: The smallest number divisible by all numbers from 1 to n
     """
-    a, b = n, get_lowest_common_multiple(*list(range(1, (n+1))))
-    print b
-
-    while a <= b:
-        is_good = True
-        for f in range(1, (n+1)):
-            if a % f != 0:
-                is_good = False
-                break
-        if is_good:
-            return a
-        a += n
+    return get_lowest_common_multiple(*list(range(1, (n+1))))
 
 
 if __name__ == '__main__':
