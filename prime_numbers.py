@@ -92,3 +92,40 @@ def get_lowest_common_multiple(*args):
     for factor in lcm_factors:
         r_val *= (factor**lcm_factors[factor])
     return r_val
+
+
+def count_factors_with_primes(x, primelist):
+    """I found this written in C somewhere on the internet
+    I cannot honestly say I understand the theory behind this, despite a
+    background in mathematics.
+    We use prime numbers to determine the total number of divisors that a
+    number x has.
+
+    :param x: A number to get the divisors of.
+    :param primelist: A list of prime numbers.
+    :return: The total number of divisors of x.
+    """
+    # Number of Divisors.
+    nod = 1
+    # Reassigned after every divisor to become the remainder.
+    remain = x
+    # Let's pick a prime number.
+    for p in primelist:
+        # If this prime squared, is greater than x, we double the number of
+        # divisors currently found, and return that
+        if p*p > x:
+            return nod * 2
+        # Exponent
+        exp = 1
+        # if the prime divides the current remainder, increase the exponent,
+        # divide it in, and check again. - This means a prime that divides in
+        # once will double our number of divisors - seems legit.
+        while remain % p == 0:
+            exp += 1
+            remain = remain // p
+        nod *= exp
+        # We're done dividing. Call it quits.
+        if remain == 1:
+            return nod
+    # We've run out of primes. Must be done. Call it quits.
+    return nod
