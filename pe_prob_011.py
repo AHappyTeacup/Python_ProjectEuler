@@ -8,6 +8,12 @@ def check(prod, lprod):
 
 
 def unpack_grid(raw_grid):
+    """Convert an unformatted grid of two digit spaced numbers in a list of
+    lists of ints
+    
+    :param raw_grid: A string grid of two digit spaced numbers 
+    :return: A lit of lists of ints
+    """
     my_grid = []
     raw_grid = raw_grid.split("\n")
     for row in raw_grid:
@@ -22,9 +28,17 @@ def unpack_grid(raw_grid):
 
 
 @timed
-def pe_prob_011(my_grid_raw):
+def pe_prob_011(my_grid_raw, num):
+    """Find the greatest product of num adjacent numbers in the same direction
+    (up, down, left, right, or diagonally) in a grid.
+    
+    :param my_grid_raw: A string grid of two digit spaced numbers
+    :param num: The number of adjacent spaces to check
+    :return: The greatest product of num adjacent numbers
+    """
 
     my_grid = unpack_grid(my_grid_raw)
+    count = num-1
     lproduct = 1
 
     i = 0
@@ -32,38 +46,42 @@ def pe_prob_011(my_grid_raw):
         j = 0
         while j < len(my_grid[i]):
             # check to the right, if possible.
-            if (j+3) < len(my_grid[i]):
-                prod = my_grid[i][j] * my_grid[i][j+1] \
-                       * my_grid[i][j+2] * my_grid[i][j+3]
+            if (j+count) < len(my_grid[i]):
+                prod = 1
+                for k in range(0, num):
+                    prod *= my_grid[i][j+k]
                 # Is this product the largest so far?
                 if prod > lproduct:
                     lproduct = prod
 
             # check bellow if possible.
-            if (i+3) < len(my_grid):
-                prod = my_grid[i][j] * my_grid[i+1][j] \
-                       * my_grid[i+2][j] * my_grid[i+3][j]
+            if (i+count) < len(my_grid):
+                prod = 1
+                for k in range(0, num):
+                    prod *= my_grid[i+k][j]
                 # Is this product the largest so far?
                 if prod > lproduct:
                     lproduct = prod
 
             # check bottom right if possible.
-            if (i + 3) < len(my_grid) and (j + 3) < len(my_grid[i]):
-                prod = my_grid[i][j] * my_grid[i+1][j+1] \
-                       * my_grid[i+2][j+2] * my_grid[i+3][j+3]
+            if (i+count) < len(my_grid) and (j+count) < len(my_grid[i]):
+                prod = 1
+                for k in range(0, num):
+                    prod *= my_grid[i+k][j+k]
                 # Is this product the largest so far?
                 if prod > lproduct:
                     lproduct = prod
 
-            # check bottom left, if possible.g
-            if (i + 3) < len(my_grid) and (j - 3) >= 0:
-                prod = my_grid[i][j] * my_grid[i+1][j-1] \
-                       * my_grid[i+2][j-2] * my_grid[i+3][j-3]
+            # check bottom left, if possible.
+            if (i+count) < len(my_grid) and (j-count) >= 0:
+                prod = 1
+                for k in range(0, num):
+                    prod *= my_grid[i+k][j-k]
                 # Is this product the largest so far?
                 if prod > lproduct:
                     lproduct = prod
-            j = j+1
-        i = i+1
+            j += 1
+        i += 1
     return lproduct
 
 
@@ -90,4 +108,4 @@ if __name__ == '__main__':
     20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54
     01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48
     """
-    print pe_prob_011(grid)
+    print pe_prob_011(grid, 4)
