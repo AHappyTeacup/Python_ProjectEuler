@@ -22,36 +22,19 @@ def pe_prob_013(num):
     """
     # A dictionary of integers, to lists of incomplete Colatz sequences.
     colatz_chain = {}
-    # list of most recently found next elements.
-    next_elems = []
 
-    # Set up for main loop
+    # Set up for main loop - for each number in our search range,
+    # generate the next element in it's COlatz sequence.
     for i in range(2, num):
-        # Get the next Colatz element.
-        next_elem = colatz_seq(i)
         # Initiate a list of the Colatz sequence for this starting number
-        colatz_chain[i] = [next_elem]
-        if next_elem == 1:
-            # Remove it from the dictionary as we have hit one.
-            del(colatz_chain[i])
-        else:
-            # Add it the list of most recently found next elements
-            next_elems.append(next_elem)
+        colatz_chain[i] = [i]
 
     # Main loop - iterate until colatz_chain has only one element.
     while len(colatz_chain) != 1:
-        # Check the most recently generated list of recent colatz numbers.
-        for elem in next_elems:
-            # Remove them from the Colatz chain if found.
-            # If a number appears in another number's Colatz sequence,
-            # the second  number's sequence must be longer, by dint of
-            # containing the entire first numbers sequence in addition.
-            if elem in colatz_chain.keys():
-                del(colatz_chain[elem])
-
-        print len(colatz_chain)
-        # A new list of most recently found next elements.
+        # A list of the colatz numbers picked up this loop
         next_elems = []
+
+        # A new list of most recently found next elements.
         # For each of the remaining starting numbers, calculate the
         # next element in their Colatz sequence.
         for key in colatz_chain.keys():
@@ -64,9 +47,16 @@ def pe_prob_013(num):
                 colatz_chain[key].append(next_elem)
                 next_elems.append(next_elem)
 
+        colatz_chain_set = set(colatz_chain.keys())
+        next_elems_set = set(next_elems)
+        new_colatz_chain = {}
+        for key in colatz_chain_set.difference(next_elems_set):
+            new_colatz_chain[key] = colatz_chain[key]
+        colatz_chain = new_colatz_chain
+
     # There is now one element left.
     return colatz_chain.keys()[0]
 
 
-if __name__ == "__main":
+if __name__ == "__main__":
     print pe_prob_013(1000000)
